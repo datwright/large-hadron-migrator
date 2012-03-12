@@ -95,8 +95,8 @@ module Lhm
     # @param [String, Symbol, Array<String, Symbol>] columns
     #   A column name given as String or Symbol. An Array of Strings or Symbols
     #   for compound indexes. It's possible to pass a length limit.
-    def add_index(columns)
-      ddl(index_ddl(columns))
+    def add_index(columns, options={})
+      ddl(index_ddl(columns, nil, options))
     end
 
     # Add a unique index to a table
@@ -167,9 +167,10 @@ module Lhm
       Table.parse(@origin.destination_name, connection)
     end
 
-    def index_ddl(cols, unique = nil)
+    def index_ddl(cols, unique = nil, options)
       type = unique ? "unique index" : "index"
-      parts = [type, idx_name(@origin.name, cols), @name, idx_spec(cols)]
+      index_name = options[:name] || idx_name(@origin.name, cols)
+      parts = [type, index_name, @name, idx_spec(cols)]
       "create %s `%s` on `%s` (%s)" % parts
     end
   end
