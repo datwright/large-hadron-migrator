@@ -128,8 +128,9 @@ module Lhm
     # @param [String, Symbol, Array<String, Symbol>] columns
     #   A column name given as String or Symbol. An Array of Strings or Symbols
     #   for compound indexes.
-    def remove_index(columns)
-      ddl("drop index `%s` on `%s`" % [idx_name(@origin.name, columns), @name])
+    def remove_index(columns, options={})
+      index_name = options[:name] || idx_name(@origin.name, columns)
+      ddl("drop index `%s` on `%s`" % [index_name, @name])
     end
 
   private
